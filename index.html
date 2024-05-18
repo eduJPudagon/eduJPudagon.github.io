@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>画像アップロード＆描画アプリ</title>
     <style>
         /* styles.css */
@@ -97,20 +98,25 @@
         });
 
         canvas.addEventListener('mousedown', startPaint);
-        canvas.addEventListener('mouseup', stopPaint);
-        canvas.addEventListener('mouseleave', stopPaint);
-        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('touchstart', startPaint);
 
         function startPaint(e) {
             painting = true;
             draw(e);
         }
 
+        canvas.addEventListener('mouseup', stopPaint);
+        canvas.addEventListener('mouseleave', stopPaint);
+        canvas.addEventListener('touchend', stopPaint);
+
         function stopPaint() {
             painting = false;
             ctx.beginPath();
             saveState();
         }
+
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('touchmove', draw);
 
         function draw(e) {
             if (!painting) return;
@@ -143,7 +149,6 @@
         });
 
         undo.addEventListener('click', () => {
-            console.log("Undo button clicked");
             if (undoStack.length > 0) {
                 redoStack.push(canvas.toDataURL());
                 const previousState = undoStack.pop();
@@ -157,7 +162,6 @@
         });
 
         redo.addEventListener('click', () => {
-            console.log("Redo button clicked");
             if (redoStack.length > 0) {
                 undoStack.push(canvas.toDataURL());
                 const nextState = redoStack.pop();
@@ -170,22 +174,21 @@
             }
         });
 
+        saveImage.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = 'canvas-drawing.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
 
+        resetCanvas.addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            uploadImage.value = '';
+            undoStack = []; // スタックをリセット
+            redoStack = []; // スタックをリセット
+        });
 
-saveImage.addEventListener('click', () => {
-    const link = document.createElement('a');
-    link.download = 'canvas-drawing.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-});
-
-resetCanvas.addEventListener('click', () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.beginPath();
-    uploadImage.value = '';
-    undoStack = []; // スタックをリセット
-    redoStack = []; // スタックをリセット
-});
-</script>
+    </script>
 </body>
 </html>

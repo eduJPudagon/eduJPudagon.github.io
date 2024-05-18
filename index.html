@@ -188,6 +188,15 @@
             undoStack = []; // スタックをリセット
             redoStack = []; // スタックをリセット
         });
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // デフォルトのタッチイベントをキャンセル
+            startPaint(e);
+        });
+        
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault(); // デフォルトのタッチイベントをキャンセル
+            draw(e);
+        });
 
     </script>
 </body>

@@ -189,13 +189,17 @@
             redoStack = []; // スタックをリセット
         });
         canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // デフォルトのタッチイベントをキャンセル
-            startPaint(e);
-        });
-        
-        canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault(); // デフォルトのタッチイベントをキャンセル
-            draw(e);
+    e.preventDefault(); // デフォルトのタッチイベントをキャンセル
+    e.stopPropagation(); // イベントの伝播を停止
+    startPaint(e);
+});
+
+canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault(); // デフォルトのタッチイベントをキャンセル
+    e.stopPropagation(); // イベントの伝播を停止
+    draw(e);
+});
+
         });
 
     </script>
